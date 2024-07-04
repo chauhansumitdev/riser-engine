@@ -1,21 +1,21 @@
 package com.engine.render;
 
+import com.engine.core.Triangle;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
-public class Window{
+public class Window {
 
     private long window;
-
     private final int width;
     private final int height;
     private final String title;
 
     public Window(int width, int height, String title){
-        this.height = height;
         this.width = width;
+        this.height = height;
         this.title = title;
     }
 
@@ -23,7 +23,7 @@ public class Window{
         GLFWErrorCallback.createPrint(System.err).set();
 
         if(!GLFW.glfwInit()){
-            throw new IllegalStateException("Unable to instantiate GLFW");
+            throw new IllegalStateException("Unable to initialize GLFW");
         }
 
         GLFW.glfwDefaultWindowHints();
@@ -33,7 +33,7 @@ public class Window{
         window = GLFW.glfwCreateWindow(width, height, title, 0, 0);
 
         if(window == 0){
-            throw  new RuntimeException("Failed to create the Window");
+            throw new RuntimeException("Failed to create the window");
         }
 
         GLFW.glfwMakeContextCurrent(window);
@@ -42,22 +42,29 @@ public class Window{
 
         GL.createCapabilities();
 
+        Triangle triangle = new Triangle(new float[]{
+                -0.5f, -0.5f, 0.0f,  // bottom left
+                0.5f, -0.5f, 0.0f,  // bottom right
+                0.0f,  0.5f, 0.0f   // top center
+        });
+
         while (!GLFW.glfwWindowShouldClose(window)) {
             clear();
+            triangle.render();
+            GLFW.glfwSwapBuffers(window);
+            GLFW.glfwPollEvents();
         }
 
+        triangle.cleanup();
         close();
     }
 
     public void clear(){
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-        GLFW.glfwSwapBuffers(window);
-        GLFW.glfwPollEvents();
+        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
     public void close(){
         GLFW.glfwDestroyWindow(window);
-
         GLFW.glfwTerminate();
         GLFW.glfwSetErrorCallback(null).free();
     }
