@@ -42,15 +42,24 @@ public class Window {
 
         GL.createCapabilities();
 
-        Triangle triangle = new Triangle(new float[]{
-                -0.5f, -0.5f, 0.0f,  // bottom left
-                0.5f, -0.5f, 0.0f,  // bottom right
-                0.0f,  0.5f, 0.0f   // top center
-        });
+        Triangle triangle = new Triangle();
+        triangle.setVertexShader("shaders/vertexShader.glsl");
+        triangle.setFragmentShader("shaders/noiseShader.glsl");
+        triangle.init();
+        triangle.draw(
+                new float[]{
+                        -0.5f, -0.5f, 0.0f,  // bottom left
+                        0.5f, -0.5f, 0.0f,  // bottom right
+                        0.0f,  0.5f, 0.0f   // top center
+                }
+        );
+
 
         while (!GLFW.glfwWindowShouldClose(window)) {
             clear();
+
             triangle.render();
+
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
         }

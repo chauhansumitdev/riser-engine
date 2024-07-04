@@ -12,16 +12,22 @@ import org.lwjgl.BufferUtils;
 public class Triangle {
     private int vao;
     private int vbo;
+
     private int shaderProgram;
 
-    private String vertexShaderPath = "shaders/vertexShader.glsl";
-    private String fragmentShaderPath = "shaders/noiseShader.glsl";
+    private String vertexShaderPath;
+    private String fragmentShaderPath;
 
-    private float[] vertices;
 
-    public Triangle(float[] vertices) {
-        this.vertices = vertices;
+    public void setVertexShader(String shader){
+        vertexShaderPath = shader;
+    }
 
+    public void setFragmentShader(String shader){
+        fragmentShaderPath = shader;
+    }
+
+    public void init(){
         String vertexShaderSource = loadShaderSource(vertexShaderPath);
         String fragmentShaderSource = loadShaderSource(fragmentShaderPath);
 
@@ -45,6 +51,9 @@ public class Triangle {
 
         vbo = GL30.glGenBuffers();
         GL30.glBindBuffer(GL30.GL_ARRAY_BUFFER, vbo);
+    }
+
+    public void draw(float[] vertices) {
 
         FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.length);
         vertexBuffer.put(vertices).flip();
