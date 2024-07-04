@@ -54,11 +54,24 @@ public class Window {
                 }
         );
 
+        Triangle triangle2 = new Triangle();
+        triangle2.setVertexShader("shaders/vertexShader.glsl");
+        triangle2.setFragmentShader("shaders/gradientShader.glsl");
+        triangle2.init();
+        triangle2.draw(
+                new float[]{
+                        0.0f, -0.5f, 0.0f,  // bottom left
+                        0.25f, 0.0f, 0.0f,  // bottom right
+                        -0.25f,  0.0f, 0.0f    // top center
+                }
+        );
+
 
         while (!GLFW.glfwWindowShouldClose(window)) {
             clear();
 
             triangle.render();
+            triangle2.render();
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
